@@ -127,7 +127,7 @@
 			  if(stat == "START_SOLVE"){
 				$('#main-menu').load('views/solve.php');
 
-				$('#btnSendAnswer').hide();
+				
 				if(serverStatus.NUMQ > 0){
 					currentSolve = 0;
 					$('#solveQuestionFrame').attr('src', serverQuestionsUri + currentSolve + '.html');
