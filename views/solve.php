@@ -22,45 +22,133 @@
 							<option value="2" >2 Stars</option>
 							<option value="3" selected>3 Stars</option>
 							<option value="4" >4 Stars</option>
+							<option value="5" >5 Stars</option>
 						</select>
 						</div> 
+
+			<button type="button" id="btnPrevQuestion" class="btn btn-small btn-primary">Prev Question</button>			
 			<button type="button" id="btnNextQuestion" class="btn btn-small btn-primary">Next Question</button>
-			<button type="button" id="btnSendAnswer" class="btn btn-small btn-primary">Send All Answers</button>
+			<button type="button" id="btnSendAnswer" class="btn btn-small btn-primary pull-right">Send All Answers</button>
 </div>
 
 <script>
 		var currentQuestion = 0;
+		var solveAnswers;
+		var solveRatings;
+
+
+
+		//load first question
+		$("#solveQuestionBody").load(serverIp + serverQuestionsUri + '/' + currentQuestion + '.html');
+
+		for(i=0; i < serverStatus.NUMQ; i++){
+			solveAnswers[i] = 1;
+			solveRatings[i] = 3;
+		}
 
 
 		//Bind listeners
 		$('#btnNextQuestion').click(solveNextQuestion);
+		$('#btnPrevQuestion').click(solvePrevQuestion);
+		$("#btnSendAnswer").click(sendAnswers);
+
 		$("#solveCorrectAns").change(setCorrectAnswer);
 		$("#solveRating").change(setRating);
-		$("#btnSendAnswer").change(sendAnswers);
+
+
+
+		console.log("\n Number of questions: " + serverStatus.NUMQ);
 
 		
-		//Disable the next question button if needed
-		if(this.currentQuestion + 1  == serverStatus.NUMQ){
-				$('#btnNextQuestion').addClass('disabled');
-			}
-
-
 		//Init first question
 		$("#solveQuestionBody").load(serverIp + serverQuestionsUri + '/' + currentQuestion + '.html');
 
 		function solveNextQuestion(){
 
-			if(this.currentQuestion < serverStatus.NUMQ){
-				this.currentQuestion++;
-				//$("#solveQuestionFrame").attr('src', serverIp + serverQuestionsUri + '/' + currentQuestion + '.html');
+			console.log("\nTrying to load question " + currentQuestion);
+
+			if(currentQuestion < serverStatus.NUMQ -1){
+
+				currentQuestion++;				
 				$("#solveQuestionBody").load(serverIp + serverQuestionsUri + '/' + currentQuestion + '.html');
+
+
+				console.log('\n solveCorrectAns: ' + $("#solveCorrectAns").val());
+
+				sAns = $("#solveCorrectAns").children();
+				$(sAns[ solveAnswers[currentQuestion] -1]).attr('selected', true);
+
+					console.log('\nsAns ' + $(sAns[ solveAnswers[currentQuestion] -1]).val());
+
+
+					sRats = $("#solveRating").children();
+					$(sRats[ solveRatings[currentQuestion] -1]).attr('selected', true);
+
+				
 			}
 
-			if(this.currentQuestion  == serverStatus.NUMQ){
-				$('#btnNextQuestion').addClass('disable');
-			}
+			
 
 		}
-		
+
+		function solvePrevQuestion(){
+
+			console.log("\nTrying to load question " + currentQuestion);
+
+			if(currentQuestion > 0){
+				currentQuestion--;				
+				$("#solveQuestionBody").load(serverIp + serverQuestionsUri + '/' + currentQuestion + '.html');
+				console.log("\nLoading question " + currentQuestion);
+
+					sAns = $("#solveCorrectAns").children();
+					$(sAns[ solveAnswers[currentQuestion] -1]).attr('selected', true);
+					
+
+
+					sRats = $("#solveRating").children();
+					$(sRats[ solveRatings[currentQuestion]  -1]).attr('selected', true);
+
+
+			}
+
+			
+		}
+
+
+		function sendAnswers(){
+
+			var msg = {
+			"TYPE": "ANSWER",
+			"NAME": userName,
+			"MYANSWER": solveAnswers,
+			"MYRATING": solveRatings,
+			"IP": myIp
+			};
+
+			$.post(serverIp  + userMsg,{MSG: JSON.stringify(msg)})
+			.success(function(){
+				alert('Questions sent');
+			})
+			.error(function(){
+				alert('Questions not sent');
+			});
+
+			alert(JSON.stringify(msg));
+
+			$('#main-menu').load('views/wait.php');
+
+		}
+
+		function setCorrectAnswer(){
+			solveAnswers[currentQuestion] = $("#solveCorrectAns").val();
+
+		}
+
+		function setRating(){
+			solveRatings[currentQuestion] = $("#solveRating").val();
+		}
+
+
+
 
 </script>

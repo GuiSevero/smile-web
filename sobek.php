@@ -11,7 +11,8 @@ putenv('LC_ALL='.$locale);
 
 $basetext = file_get_contents("basetext.txt");
 
-$texto = $basetext . ' ' .$_POST["texto"];
+$texto =  $_POST["texto"] .' ' .$basetext;
+
 
 if ($texto) {
 

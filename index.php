@@ -29,13 +29,10 @@
 
 			<div class="span4">
 				<ul class="nav pull-right">
-              		<li id="op-menu" class="btn dropdown">
-	                	<a href="#" data-toggle="dropdown" class="dropdown-toggle"><i class="icon-user"></i><b><span id="userStatus"></span></b> <b class="caret"></b></a>
-	                     <ul id="yw0" class="dropdown-menu opt-menu">
-							 <li><a id="disconnect" class="btn btn-danger btn-small">Disconnect</a></li>
-							 <li><a id="disconnect" class="btn btn-info btn-small" target="_blank" href="base.php">Base Text</a></li>
-						</ul>					 
+              		<li id="op-menu" class="btn">
+	                	 <b><span id="userStatus"></span></b> - <i class="icon-user"></i>
                    </li>
+
               	</ul>
               	<div class="clearfix"></div>
 			</div><!-- /span -->

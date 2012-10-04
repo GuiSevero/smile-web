@@ -11,8 +11,7 @@
 		var getStatusId;
 		var oldStatus;
 		var currentSolve;
-		var solveAnswers;
-		var solveRatings;
+		
 
 		var solveObject;
 		var serverStatusObject;
@@ -44,7 +43,7 @@
 
 
 			}).error(function(){
-				//O usuário nao tinha execucao antiga
+				//O usuÃ¡rio nao tinha execucao antiga
 				
 			}).success(function(){
 
@@ -130,7 +129,6 @@
 				
 				if(serverStatus.NUMQ > 0){
 					currentSolve = 0;
-					$('#solveQuestionFrame').attr('src', serverQuestionsUri + currentSolve + '.html');
 					solveRatings = new Array(serverStatus.NUMQ);
 					solveAnswers = new Array(serverStatus.NUMQ);
 					for(i=0; i<serverStatus.NUMQ; i++){
@@ -151,57 +149,7 @@
 		$.post(serverIp + userMsg,{MSG: JSON.stringify(msg)} );
 	  }	
 	  	
-	 function sendQuestion(){
-		var msg = {
-		"TYPE": "QUESTION",
-		"NAME": userName,
-		"Q": 	tinyMCE.get('qtnBody').getContent(),
-		"O1":  $('#qtnAnsText1').val(),
-		"O2":  $('#qtnAnsText2').val(),
-		"O3":  $('#qtnAnsText3').val(),
-		"O4":  $('#qtnAnsText4').val(),
-		"A":  $('#correctAns').val(),
-		"IP": myIp
-		};
 	
-		
-		$.post(serverIp + userMsg,{MSG: JSON.stringify(msg)})
-		.success(function(){
-			alert('Question sent');
-		})
-		.error(function(){
-			alert('Question not sent');
-		});
-		
-	}
-
-
-	function nextSolveQuestion(){
-
-			if(confirm("Is option " + $('#solveCorrectAns').val() + " your final answer for this question?")){
-				
-				//effect
-				$('#solveQuestionFrame').hide('slow').show('slow');
-
-				if(currentSolve < serverStatus.NUMQ){
-					currentSolve++;
-					if(currentSolve == serverStatus.NUMQ -1){
-						$('#btnNextSolveQuestion').hide('slow');
-						$('#btnSendAnswer').show('slow');
-					}
-
-					$('#solveQuestionFrame').attr('src', serverQuestionsUri + currentSolve + '.html');				
-					
-				}
-
-				
-					
-			}
-			
-			
-
-			
-	}
 
 	function connect(){
 			
@@ -230,71 +178,9 @@
 	}
 
 
-	function setCorrectAnswer(){
-		solveAnswers[currentSolve] = $("#solveCorrectAns").val();
+	
+	
 
-	}
-
-	function setRating(){
-		solveRatings[currentSolve] = $("#solveRating").val();
-	}
-
-	function sendAnsewrs(){
-
-		var msg = {
-		"TYPE": "ANSWER",
-		"NAME": userName,
-		"MYANSWER": solveAnswers,
-		"MYRATING": solveRatings,
-		"IP": myIp
-		};
-
-		$.post(serverIp  + userMsg,{MSG: JSON.stringify(msg)})
-		.success(function(){
-			alert('Questions sent');
-		})
-		.error(function(){
-			alert('Questions not sent');
-		});
-
-		alert(JSON.stringify(msg));
-
-		$('#main-menu').load('views/wait.php');
-
-	}
-
-		function googleSearch(){	
-
-			$.post('sobek.php', {texto: $(tinyMCE.get('qtnBody').getContent()).text()}, sobekCallBack );
-
-		}
-
-        
-        function sobekCallBack(data) {
-          // Create a search control
-          var searchControl = new google.search.SearchControl();
-
-          // Add in a full set of searchers     
-          searchControl.addSearcher(new google.search.ImageSearch());     
-          searchControl.addSearcher(new google.search.WebSearch());
-          
-          // tell the searcher to draw itself and tell it where to attach
-          searchControl.draw(document.getElementById("searchcontrol"));
-
-          searchControl.setSearchCompleteCallback(this, function(){
-          	console.log('google callback');
-          	//$('.gs-image > img').draggable();
-          	$('#searchcontrol').show('slow');
-          	
-          });
-      
-          // execute an inital search
-          if(data != '')
-          	searchControl.execute(data);
-          	else
-          	searchControl.execute($('#qtnBody').val());
-
-          
-        }        
+		
         
  
